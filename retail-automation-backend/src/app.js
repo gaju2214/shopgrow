@@ -1,3 +1,5 @@
+// Start Instagram token auto-refresh scheduler
+require('./autoRefreshInstagramToken');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -49,9 +51,10 @@ app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/customers', require('./routes/customerRoutes'));
 app.use('/api/sales', require('./routes/salesRoutes'));
+app.use('/api/marketing', require('./routes/marketing'));
 
 // 404 handler (Express 5 compatible - wildcard must be named)
-app.use('/*catchAll', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: {
@@ -59,6 +62,13 @@ app.use('/*catchAll', (req, res) => {
       message: 'Route not found'
     }
   });
+});
+
+
+// Debug log every request URL before 404 handler
+app.use((req, res, next) => {
+  console.log('Request URL:', req.originalUrl);
+  next();
 });
 
 // Global error handler (must be last)

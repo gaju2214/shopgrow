@@ -1,6 +1,14 @@
-const { Product, Category } = require('../models');
+const { Product, Category, MarketingQueue } = require('../models');
 const { Op } = require('sequelize');
 const validators = require('../utils/validators');
+let marketingQueue;
+try {
+  marketingQueue = require('../queue/marketingWorker');
+} catch (e) {
+  // If the worker or its deps aren't installed yet (e.g., on fresh install),
+  // provide a no-op queue so the app still runs.
+  marketingQueue = { add: async () => {} };
+}
 
 // Create product
 exports.createProduct = async (req, res, next) => {
@@ -376,6 +384,32 @@ exports.updateStock = async (req, res, next) => {
 
     await product.update({ stock_quantity: newQuantity });
 
+    // Enqueue marketing task: notify customers on WhatsApp and prepare Instagram post (approval required)
+    try {
+      const mq = await MarketingQueue.create({
+        store_id: req.store_id,
+        type: 'stock_update',
+        payload: {
+          productId: product.id,
+          title: `${product.name} stock updated`,
+          message: `Hello! ${product.name} now has ${newQuantity} ${product.unit}(s) in stock. Visit the store to buy now!`,
+          images: product.image_urls,
+          caption: `Now available: ${product.name} - ${product.selling_price}`
+        },
+        scheduled_at: new Date(),
+        status: 'pending',
+        requires_approval: true,
+        approved: false,
+        send_whatsapp: true,
+        send_instagram: true
+      });
+
+      // Push job to worker queue
+      try { await marketingQueue.add({ mqId: mq.id }); } catch (e) { console.error('Failed to push marketing job to queue', e?.message || e); }
+    } catch (err) {
+      console.error('Failed to create marketing queue entry', err?.message || err);
+    }
+
     res.status(200).json({
       success: true,
       message: 'Stock updated successfully',
@@ -385,7 +419,8 @@ exports.updateStock = async (req, res, next) => {
           name: product.name,
           stock_quantity: product.stock_quantity,
           is_low_stock: product.isLowStock()
-        }
+        },
+        marketing_enqueued: true
       }
     });
 

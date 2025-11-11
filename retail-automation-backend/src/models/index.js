@@ -4,12 +4,16 @@ const Product = require('./Product');
 const Customer = require('./Customer');
 const Sale = require('./Sale');
 const SaleItem = require('./SaleItem');
+const MarketingQueue = require('./MarketingQueue');
+const Template = require('./Template');
 
 // Store associations
 Store.hasMany(Category, { foreignKey: 'store_id', as: 'categories' });
 Store.hasMany(Product, { foreignKey: 'store_id', as: 'products' });
 Store.hasMany(Customer, { foreignKey: 'store_id', as: 'customers' });
 Store.hasMany(Sale, { foreignKey: 'store_id', as: 'sales' });
+Store.hasMany(MarketingQueue, { foreignKey: 'store_id', as: 'marketingQueue' });
+Store.hasMany(Template, { foreignKey: 'store_id', as: 'templates' });
 
 // Category associations
 Category.belongsTo(Store, { foreignKey: 'store_id', as: 'store' });
@@ -35,6 +39,10 @@ Sale.hasMany(SaleItem, { foreignKey: 'sale_id', as: 'items' });
 SaleItem.belongsTo(Sale, { foreignKey: 'sale_id', as: 'sale' });
 SaleItem.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
 
+// Marketing associations
+MarketingQueue.belongsTo(Store, { foreignKey: 'store_id', as: 'store' });
+Template.belongsTo(Store, { foreignKey: 'store_id', as: 'store' });
+
 module.exports = {
   Store,
   Category,
@@ -42,4 +50,6 @@ module.exports = {
   Customer,
   Sale,
   SaleItem
+  ,MarketingQueue,
+  Template
 };
