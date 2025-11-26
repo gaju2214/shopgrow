@@ -1,0 +1,338 @@
+/* Full page container */
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    height: 100vh;
+    background: linear-gradient(135deg, #d8f0ff, #e9f5ff, #bde7ff);
+}
+
+
+/* LEFT SIDE (LOGIN BOX) */
+
+.login-left {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Card */
+
+.login-card {
+    background: rgba(255, 255, 255, 0.65);
+    padding: 40px;
+    width: 90%;
+    max-width: 380px;
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.login-card h2 {
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #123d63;
+}
+
+
+/* Form */
+
+.login-form input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: 1px solid #d3e5f5;
+    font-size: 15px;
+    outline: none;
+    transition: 0.25s ease;
+}
+
+.login-form input:focus {
+    border-color: #5ab3ff;
+    box-shadow: 0 0 8px rgba(90, 179, 255, 0.3);
+}
+
+
+/* Button */
+
+.login-form button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #007bff, #00d0ff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: 0.3s ease-out;
+}
+
+.login-form button:hover {
+    opacity: 0.92;
+}
+
+
+/* Error Box */
+
+.error-message {
+    background: #ffe3e3;
+    padding: 10px;
+    border-radius: 8px;
+    color: #c0392b;
+    margin-bottom: 15px;
+    border: 1px solid #ffbaba;
+}
+
+
+/* Small links */
+
+.small-link {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.small-link a {
+    color: #067aff;
+    text-decoration: none;
+}
+
+.small-link a:hover {
+    text-decoration: underline;
+}
+
+
+/* RIGHT SIDE GRAPHIC */
+
+.login-right {
+    width: 60%;
+    text-align: center;
+}
+
+.login-right h1 {
+    font-size: 32px;
+    color: #083d77;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.illustration {
+    width: 80%;
+    object-fit: contain;
+}
+
+
+/* ============================================================PAGE LAYOUT
+   ============================================================ */
+
+.signup-page {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(135deg, #d8f0ff, #e9f5ff, #bde7ff);
+}
+
+
+/* ============================================================
+   LEFT SIDE (FORM)
+   ============================================================ */
+
+.signup-left {
+    width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 40px;
+}
+
+.signup-card {
+    width: 90%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 22px 28px;
+    border-radius: 18px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ============================================================
+   TAB HEADER
+   ============================================================ */
+
+.tab-header {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.tab {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.tab.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.tab.disabled {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   TITLE
+   ============================================================ */
+
+.signup-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+
+/* ============================================================
+   FORM ROWS (2 columns)
+   ============================================================ */
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+
+/* ============================================================
+   INPUT GROUP
+   ============================================================ */
+
+.input-group {
+    position: relative;
+}
+
+.icon {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    opacity: 0.6;
+    font-size: 18px;
+}
+
+.signup-form input,
+.signup-form select {
+    width: 100%;
+    height: 42px;
+    padding: 10px 36px;
+    border-radius: 10px;
+    border: 1px solid #d2e3f3;
+    font-size: 10px;
+    background: white;
+}
+
+
+/* ============================================================
+   UPLOAD ROW (WITH GAP)
+   ============================================================ */
+
+.upload-row {
+    display: flex;
+    gap: 14px;
+    /* GAP ADDED HERE */
+    margin-top: 10px;
+}
+
+
+/* ============================================================
+   FILE UPLOAD BOX
+   ============================================================ */
+
+.file-upload {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px dashed #a6c9e9;
+    background: rgba(255, 255, 255, 0.82);
+    text-align: center;
+    cursor: pointer;
+}
+
+.file-upload input {
+    display: none;
+}
+
+
+/* ============================================================
+   SUBMIT BUTTON
+   ============================================================ */
+
+.signup-btn {
+    width: 100%;
+    height: 44px;
+    margin-top: 12px;
+    background: linear-gradient(90deg, #007bff, #00c9ff);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+}
+
+
+/* ============================================================
+   ERROR BOX
+   ============================================================ */
+
+.error-box {
+    background: #ffe6e6;
+    border: 1px solid #ffb3b3;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    color: #c40000;
+    text-align: center;
+}
+
+
+/* ============================================================
+   BOTTOM LINKS
+   ============================================================ */
+
+.bottom-links {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   RIGHT SIDE
+   ============================================================ */
+
+.signup-right {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.signup-right h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #083d77;
+}
+
+.signup-illustration {
+    width: 70%;
+    margin-top: 10px;
+}

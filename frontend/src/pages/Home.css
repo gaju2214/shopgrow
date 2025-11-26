@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.home-container {
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(135deg, #4c6fff 0%, #6c3dd3 100%);
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+
+/* Navbar Styles */
+.navbar {
+    padding: 20px 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.navbar-brand h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Content Styles */
+.auth-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-top: -60px; /* To center the content better */
+}
+
+.welcome-text {
+    color: white;
+    font-size: 48px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.auth-button {
+    padding: 15px 0;
+    font-size: 18px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-weight: 500;
+}
+
+.login-button {
+    background-color: white;
+    color: #4c6fff;
+}
+
+.login-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.register-button {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.register-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.navbar-menu li a:hover {
+    color: #667eea;
+    background-color: rgba(102, 126, 234, 0.1);
+}
+
+
+/* Auth Section */
+
+.auth-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 70px);
+    padding: 20px;
+}
+
+.welcome-text {
+    color: white;
+    font-size: 48px;
+    margin-bottom: 40px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Auth Buttons - Vertical Layout */
+
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-button {
+    background-color: #fff;
+    color: #667eea;
+}
+
+.login-button:hover {
+    background-color: #667eea;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.register-button {
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.register-button:hover {
+    background-color: #fff;
+    color: #667eea;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .navbar-menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .welcome-text {
+        font-size: 32px;
+        margin-bottom: 30px;
+    }
+    .auth-buttons {
+        max-width: 250px;
+    }
+    .auth-button {
+        font-size: 16px;
+        padding: 12px 30px;
+    }
+}

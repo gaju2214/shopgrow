@@ -1,0 +1,220 @@
+/* ============================================================
+   PORTFOLIO PAGE STYLES
+   ============================================================ */
+
+.portfolio-filters-card {
+    margin-bottom: 25px;
+}
+
+.portfolio-filter-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-pill {
+    padding: 12px 24px;
+    border: 2px solid #E5E7EB;
+    background: white;
+    border-radius: 25px;
+    color: #6B7280;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.filter-pill:hover {
+    background: #F3F4F6;
+    border-color: #9CA3AF;
+    transform: translateY(-2px);
+}
+
+.filter-pill.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+
+/* Portfolio Product Grid */
+
+.portfolio-products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.portfolio-product-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.portfolio-product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.product-card-header {
+    position: relative;
+    padding: 24px;
+    background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+}
+
+.product-image-box {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.product-emoji {
+    font-size: 64px;
+}
+
+.stock-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stock-badge.low {
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+    color: #EF4444;
+}
+
+.stock-badge.medium {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    color: #F59E0B;
+}
+
+.stock-badge.high {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    color: #10B981;
+}
+
+.product-card-body {
+    padding: 20px;
+}
+
+.product-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0 0 8px 0;
+}
+
+.product-category-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #F3F4F6;
+    color: #6B7280;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: 16px;
+}
+
+.product-metrics {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 14px;
+    background: #F9FAFB;
+    border-radius: 10px;
+}
+
+.metric-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 11px;
+    color: #9CA3AF;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.product-rating,
+.product-views {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B7280;
+}
+
+
+/* ============================================================
+   PORTFOLIO RESPONSIVE DESIGN
+   ============================================================ */
+
+@media (min-width: 768px) and (max-width: 1280px) {
+    .portfolio-products-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .portfolio-products-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .portfolio-filter-buttons {
+        flex-direction: column;
+    }
+    .filter-pill {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 1281px) {
+    .portfolio-products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

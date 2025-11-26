@@ -1,0 +1,1021 @@
+/* ============================================================
+   GLOBAL RESET
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+
+/* ============================================================
+   CRM DASHBOARD LAYOUT
+   ============================================================ */
+
+.crm-dashboard {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 25%, #E0E7FF 75%, #DBEAFE 100%);
+    background-attachment: fixed;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+
+/* ============================================================
+   COMPACT SIDEBAR
+   ============================================================ */
+
+.crm-sidebar {
+    width: 70px;
+    background: #FFFFFF;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+    flex-shrink: 0;
+    z-index: 10;
+    align-items: center;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding: 10px 0;
+}
+
+.logo-icon {
+    font-size: 28px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logo-icon:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    width: 100%;
+    align-items: center;
+}
+
+.nav-item {
+    background: transparent;
+    border: none;
+    color: #6B7280;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+.nav-icon {
+    font-size: 24px;
+}
+
+.nav-item:hover {
+    background: #F3F4F6;
+    color: #374151;
+    transform: scale(1.05);
+}
+
+.nav-item.active {
+    background: #3B82F6;
+    color: white;
+}
+
+.nav-item:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 65px;
+    background: #1F2937;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+
+.crm-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    width: calc(100% - 70px);
+}
+
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+
+.crm-navbar {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    min-height: 75px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 5;
+}
+
+.navbar-left h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.logout-btn {
+    padding: 11px 26px;
+    background: #EF4444;
+    color: white;
+    border: 2px solid #EF4444;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.logout-btn:hover {
+    background: transparent;
+    color: #EF4444;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+
+/* ============================================================
+   CONTENT AREA - INCREASED TOP PADDING
+   ============================================================ */
+
+.crm-content {
+    flex: 1;
+    padding: 40px 20px 25px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* ============================================================
+   ROW 1: 4 STAT CARDS - MOVED DOWN MORE
+   ============================================================ */
+
+.stats-row-four {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    min-height: 130px;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.blue-bg {
+    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+}
+
+.green-bg {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+}
+
+.red-bg {
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+}
+
+.purple-bg {
+    background: linear-gradient(135deg, #E9D5FF 0%, #DDD6FE 100%);
+}
+
+.orange-bg {
+    background: linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%);
+}
+
+.stat-info h3 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0 0 6px 0;
+}
+
+.stat-info p {
+    font-size: 13px;
+    color: #9CA3AF;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.stat-progress {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+}
+
+.circular-chart {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #E5E7EB;
+    stroke-width: 3.5;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+}
+
+.blue-circle {
+    stroke: #3B82F6;
+}
+
+.green-circle {
+    stroke: #10B981;
+}
+
+.red-circle {
+    stroke: #EF4444;
+}
+
+.purple-circle {
+    stroke: #A855F7;
+}
+
+.percentage-text {
+    fill: #1F2937;
+    font-size: 9px;
+    font-weight: 700;
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+@keyframes progress {
+    0% {
+        stroke-dasharray: 0, 100;
+    }
+}
+
+
+/* ============================================================
+   ROW 2: Sales Reports + Top Products - INCREASED WIDTH
+   ============================================================ */
+
+.content-row-two {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 25px;
+}
+
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+    padding-bottom: 12px;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0;
+}
+
+.time-select {
+    padding: 8px 16px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #6B7280;
+    background: white;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.time-select:hover {
+    border-color: #3B82F6;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #9CA3AF;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+    color: #6B7280;
+}
+
+.see-more-btn {
+    background: none;
+    border: none;
+    color: #6B7280;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.see-more-btn:hover {
+    color: #3B82F6;
+}
+
+
+/* ============================================================
+   SALES CHART - INCREASED WIDTH & HEIGHT
+   ============================================================ */
+
+.sales-chart-card {
+    max-height: 400px;
+}
+
+.chart-wrapper {
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+}
+
+.line-chart {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ============================================================
+   TOP PRODUCTS CARD - INCREASED WIDTH & HEIGHT
+   ============================================================ */
+
+.top-products-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    max-height: 400px;
+}
+
+.products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    max-height: 280px;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #F9FAFB;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.product-item:hover {
+    background: #F3F4F6;
+    transform: translateX(5px);
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.product-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    flex-shrink: 0;
+}
+
+.product-details h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1F2937;
+    margin: 0 0 4px 0;
+}
+
+.product-details p {
+    font-size: 11px;
+    color: #9CA3AF;
+    margin: 0;
+}
+
+.product-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.product-sales {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.product-percentage {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 6px;
+}
+
+.product-percentage.green {
+    background: #D1FAE5;
+    color: #10B981;
+}
+
+.product-percentage.red {
+    background: #FEE2E2;
+    color: #EF4444;
+}
+
+
+/* ============================================================
+   ROW 3: Analytics Overview - REDUCED HEIGHT
+   ============================================================ */
+
+.analytics-full-card {
+    margin-bottom: 20px;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.analytics-box {
+    background: #F9FAFB;
+    padding: 18px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s ease;
+}
+
+.analytics-box:hover {
+    background: #F3F4F6;
+    transform: translateY(-3px);
+}
+
+.analytics-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.revenue-icon {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+}
+
+.customers-icon {
+    background: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 100%);
+}
+
+.orders-icon {
+    background: linear-gradient(135deg, #D1FAE5 0%, #6EE7B7 100%);
+}
+
+.conversion-icon {
+    background: linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 100%);
+}
+
+.analytics-content {
+    flex: 1;
+}
+
+.analytics-content h4 {
+    font-size: 13px;
+    color: #9CA3AF;
+    margin: 0 0 8px 0;
+    font-weight: 500;
+}
+
+.analytics-content h3 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0 0 8px 0;
+}
+
+.analytics-trend {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.analytics-trend.positive {
+    background: #D1FAE5;
+    color: #10B981;
+}
+
+.analytics-trend.negative {
+    background: #FEE2E2;
+    color: #EF4444;
+}
+
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+
+.crm-main::-webkit-scrollbar,
+.crm-sidebar::-webkit-scrollbar,
+.crm-content::-webkit-scrollbar,
+.products-list::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.crm-main::-webkit-scrollbar-track,
+.crm-sidebar::-webkit-scrollbar-track,
+.crm-content::-webkit-scrollbar-track,
+.products-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.crm-main::-webkit-scrollbar-thumb,
+.crm-sidebar::-webkit-scrollbar-thumb,
+.crm-content::-webkit-scrollbar-thumb,
+.products-list::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 10px;
+}
+
+.crm-main::-webkit-scrollbar-thumb:hover,
+.crm-sidebar::-webkit-scrollbar-thumb:hover,
+.crm-content::-webkit-scrollbar-thumb:hover,
+.products-list::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+
+/* ============================================================
+   RESPONSIVE DESIGN - Tablet (768px - 1280px)
+   ============================================================ */
+
+@media (min-width: 768px) and (max-width: 1280px) {
+    .crm-content {
+        padding: 35px 24px 20px;
+    }
+    .stats-row-four {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 25px;
+        margin-top: 20px;
+    }
+    .content-row-two {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    .analytics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE DESIGN - Mobile (Below 768px)
+   ============================================================ */
+
+@media (max-width: 767px) {
+    .crm-dashboard {
+        flex-direction: column;
+    }
+    .crm-sidebar {
+        width: 100%;
+        height: 65px;
+        flex-direction: row;
+        padding: 10px 16px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar-logo {
+        display: none;
+    }
+    .sidebar-nav {
+        flex-direction: row;
+        gap: 8px;
+        width: 100%;
+        justify-content: space-around;
+    }
+    .nav-item {
+        width: 45px;
+        height: 45px;
+    }
+    .crm-main {
+        width: 100%;
+        margin-bottom: 65px;
+    }
+    .crm-content {
+        padding: 30px 18px 85px;
+    }
+    .stats-row-four {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-top: 10px;
+    }
+    .content-row-two {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .analytics-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .sales-chart-card,
+    .top-products-card {
+        max-height: none;
+    }
+    .chart-wrapper {
+        height: 220px;
+    }
+    .products-list {
+        max-height: 240px;
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE DESIGN - Large Screens (Above 1280px)
+   ============================================================ */
+
+@media (min-width: 1281px) {
+    .stats-row-four {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .content-row-two {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .analytics-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+
+/* ============================================================
+   PORTFOLIO PAGE STYLES
+   ============================================================ */
+
+.portfolio-filters-card {
+    margin-bottom: 25px;
+}
+
+.portfolio-filter-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-pill {
+    padding: 12px 24px;
+    border: 2px solid #E5E7EB;
+    background: white;
+    border-radius: 25px;
+    color: #6B7280;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.filter-pill:hover {
+    background: #F3F4F6;
+    border-color: #9CA3AF;
+    transform: translateY(-2px);
+}
+
+.filter-pill.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+
+/* Portfolio Product Grid */
+
+.portfolio-products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.portfolio-product-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.portfolio-product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.product-card-header {
+    position: relative;
+    padding: 24px;
+    background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+}
+
+.product-image-box {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.product-emoji {
+    font-size: 64px;
+}
+
+.stock-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stock-badge.low {
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+    color: #EF4444;
+}
+
+.stock-badge.medium {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    color: #F59E0B;
+}
+
+.stock-badge.high {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    color: #10B981;
+}
+
+.product-card-body {
+    padding: 20px;
+}
+
+.product-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0 0 8px 0;
+}
+
+.product-category-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #F3F4F6;
+    color: #6B7280;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: 16px;
+}
+
+.product-metrics {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 14px;
+    background: #F9FAFB;
+    border-radius: 10px;
+}
+
+.metric-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 11px;
+    color: #9CA3AF;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.product-rating,
+.product-views {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B7280;
+}
+
+
+/* ============================================================
+   PORTFOLIO RESPONSIVE DESIGN
+   ============================================================ */
+
+@media (min-width: 768px) and (max-width: 1280px) {
+    .portfolio-products-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .portfolio-products-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .portfolio-filter-buttons {
+        flex-direction: column;
+    }
+    .filter-pill {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 1281px) {
+    .portfolio-products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
