@@ -28,8 +28,24 @@ function Register() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (error) setError("");
+  };
+
+  // Separate handler for file inputs
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    
+    // Optional: Add file size validation
+    if (files[0]) {
+      const maxSize = name === "logo" ? 5 * 1024 * 1024 : 50 * 1024 * 1024; // 5MB for logo, 50MB for video
+      if (files[0].size > maxSize) {
+        setError(`${name === "logo" ? "Logo" : "Video"} file size should be less than ${maxSize / (1024 * 1024)}MB`);
+        return;
+      }
+    }
+    
+    setFormData((prev) => ({ ...prev, [name]: files[0] }));
     if (error) setError("");
   };
 
@@ -52,8 +68,12 @@ function Register() {
 
     try {
       const registrationData = new FormData();
+      
+      // Append all form fields to FormData
       Object.keys(formData).forEach((key) => {
-        if (formData[key]) registrationData.append(key, formData[key]);
+        if (formData[key] && key !== "confirmPassword") {
+          registrationData.append(key, formData[key]);
+        }
       });
 
       const response = await api.client.post(
@@ -67,7 +87,7 @@ function Register() {
         navigate("/login");
       }
     } catch (err) {
-      setError("Registration failed. Try again.");
+      setError(err.response?.data?.message || "Registration failed. Try again.");
     }
 
     setLoading(false);
@@ -75,21 +95,17 @@ function Register() {
 
   return (
     <div className="signup-page">
-
       {/* Left Form Section */}
       <div className="signup-left">
         <div className="signup-card">
-
           <h2 className="signup-title">Sign Up</h2>
 
           {error && <div className="error-box">{error}</div>}
 
           <form onSubmit={handleSubmit} className="signup-form">
-
             {/* ROW 1 */}
             <div className="form-row-2">
               <div className="input-group">
-               
                 <input
                   type="text"
                   name="name"
@@ -101,7 +117,6 @@ function Register() {
               </div>
 
               <div className="input-group">
-            
                 <input
                   type="tel"
                   name="mobile"
@@ -117,7 +132,6 @@ function Register() {
             {/* ROW 2 */}
             <div className="form-row-2">
               <div className="input-group">
-               
                 <input
                   type="email"
                   name="email"
@@ -129,7 +143,6 @@ function Register() {
               </div>
 
               <div className="input-group">
-                
                 <input
                   type="text"
                   name="address"
@@ -144,7 +157,6 @@ function Register() {
             {/* ROW 3 */}
             <div className="form-row-2">
               <div className="input-group">
-          
                 <input
                   type="text"
                   name="city"
@@ -156,7 +168,6 @@ function Register() {
               </div>
 
               <div className="input-group">
-               
                 <select
                   name="category"
                   value={formData.category}
@@ -175,7 +186,6 @@ function Register() {
             {/* ROW 4 */}
             <div className="form-row-2">
               <div className="input-group">
-               
                 <input
                   type="text"
                   name="storeName"
@@ -187,7 +197,6 @@ function Register() {
               </div>
 
               <div className="input-group">
-                
                 <input
                   type="text"
                   name="storeId"
@@ -202,7 +211,6 @@ function Register() {
             {/* ROW 5 */}
             <div className="form-row-2">
               <div className="input-group">
-           
                 <input
                   type="url"
                   name="url"
@@ -213,7 +221,6 @@ function Register() {
               </div>
 
               <div className="input-group">
-             
                 <input
                   type="text"
                   name="gstNo"
@@ -227,19 +234,18 @@ function Register() {
             {/* ROW 6 */}
             <div className="form-row-2">
               <div className="input-group">
-            
                 <input
                   type="password"
                   name="password"
                   placeholder="Password (Min 6 characters)"
                   value={formData.password}
                   onChange={handleChange}
+                  minLength={6}
                   required
                 />
               </div>
 
               <div className="input-group">
-                
                 <input
                   type="password"
                   name="confirmPassword"
@@ -255,16 +261,26 @@ function Register() {
             <div className="upload-row">
               <label className="file-upload">
                 <span>📁 Upload Logo</span>
-                <input type="file" accept="image/*" />
+                <input 
+                  type="file" 
+                  name="logo"
+                  accept="image/*" 
+                  onChange={handleFileChange}
+                />
               </label>
 
               <label className="file-upload">
                 <span>🎥 Upload Video</span>
-                <input type="file" accept="video/*" />
+                <input 
+                  type="file" 
+                  name="video"
+                  accept="video/*" 
+                  onChange={handleFileChange}
+                />
               </label>
             </div>
 
-            <button className="signup-btn" disabled={loading}>
+            <button className="signup-btn" type="submit" disabled={loading}>
               {loading ? "Registering..." : "Sign Up"}
             </button>
           </form>
@@ -275,7 +291,6 @@ function Register() {
             </p>
             <p><Link to="/">Back to Home</Link></p>
           </div>
-
         </div>
       </div>
 
@@ -288,7 +303,6 @@ function Register() {
           alt="signup-screen"
         />
       </div>
-
     </div>
   );
 }

@@ -141,7 +141,10 @@ function Stock() {
 
       try {
         const resp = await api.client.get(`${BASE_URL}/api/categories`, {
-          headers: api.authHeaders()
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
 
         let backendCategories = [];
@@ -160,10 +163,11 @@ function Stock() {
         setCategories(unique);
 
       } catch (categoryErr) {
+        console.error('Error fetching backend categories:', categoryErr);
         setCategories(predefinedCategories);
       }
     } catch (err) {
-      console.error('Error fetching categories:', err.message);
+      console.error('Error in fetchCategories:', err.message);
     }
   };
 
@@ -173,6 +177,7 @@ function Stock() {
       const token = getAuthToken();
       
       if (!token) {
+        console.warn('No auth token found');
         setProducts([]);
         setLoading(false);
         return;
@@ -188,7 +193,10 @@ function Stock() {
       url += `?${params.toString()}`;
 
       const response = await api.client.get(url, {
-        headers: api.authHeaders(),
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
         timeout: 5000
       });
 
@@ -202,6 +210,9 @@ function Stock() {
       }
     } catch (error) {
       console.error('Error loading products:', error);
+      if (error.response?.status === 401) {
+        console.error('Unauthorized - Invalid token or expired');
+      }
       setProducts([]);
     } finally {
       setLoading(false);
@@ -225,10 +236,20 @@ function Stock() {
       setCategoryLoading(true);
       setCategoryError('');
 
+      const token = getAuthToken();
+      if (!token) {
+        setCategoryError('Authorization token missing');
+        setCategoryLoading(false);
+        return;
+      }
+
       const payload = { name: formData.newCategory.trim() };
 
       const response = await api.client.post(`${BASE_URL}/api/categories`, payload, {
-        headers: api.authHeaders()
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       const d = response.data || {};
@@ -252,7 +273,8 @@ function Stock() {
       setTimeout(() => setSuccessMessage(''), 3000);
 
     } catch (error) {
-      setCategoryError(error.response?.data?.message || 'Failed to create category');
+      console.error('Category creation error:', error);
+      setCategoryError(error.response?.data?.message || error.response?.data?.error?.message || 'Failed to create category');
     } finally {
       setCategoryLoading(false);
     }
@@ -290,12 +312,14 @@ function Stock() {
         low_stock_threshold: parseInt(formData.lowStockAlert) || 5
       };
 
+      console.log('Submitting product:', productData);
+
       const response = await api.client.post(
         `${BASE_URL}/api/products`,
         productData,
         {
           headers: {
-            ...api.authHeaders(),
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }
@@ -326,15 +350,19 @@ function Stock() {
         }, 1500);
       }
     } catch (err) {
-      console.error('❌ Add Error:', err.response?.data);
+      console.error('❌ Add Error:', err);
       
       let errorMsg = 'Failed to add product';
-      if (err.response?.data?.message) {
+      if (err.response?.status === 401) {
+        errorMsg = 'Unauthorized - Invalid token or expired';
+      } else if (err.response?.data?.message) {
         errorMsg = err.response.data.message;
       } else if (err.response?.data?.error) {
         errorMsg = typeof err.response.data.error === 'string' 
           ? err.response.data.error 
           : err.response.data.error.message || 'Invalid request';
+      } else if (err.request && !err.response) {
+        errorMsg = 'No response from server - check connection';
       }
       
       setError('❌ ' + errorMsg);
@@ -445,10 +473,12 @@ function Stock() {
         }, 1500);
       }
     } catch (err) {
-      console.error('❌ Update Error:', err.response?.data);
+      console.error('❌ Update Error:', err);
       
       let errorMsg = 'Failed to update product';
-      if (err.response?.data?.error?.message) {
+      if (err.response?.status === 401) {
+        errorMsg = 'Unauthorized - Invalid token or expired';
+      } else if (err.response?.data?.error?.message) {
         errorMsg = err.response.data.error.message;
       } else if (err.response?.data?.message) {
         errorMsg = err.response.data.message;
@@ -511,7 +541,9 @@ function Stock() {
       
       let errorMsg = 'Failed to delete product';
       
-      if (err.response?.status === 404) {
+      if (err.response?.status === 401) {
+        errorMsg = 'Unauthorized - Invalid token or expired';
+      } else if (err.response?.status === 404) {
         errorMsg = 'Product not found (404)';
       } else if (err.response?.data?.message) {
         errorMsg = err.response.data.message;

@@ -11,9 +11,23 @@ client.interceptors.request.use((config) => {
   const token = localStorage.getItem('token') || localStorage.getItem('authToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('✅ Auth token attached to request:', token.substring(0, 20) + '...');
+  } else {
+    console.warn('⚠️ No auth token found in localStorage');
   }
   return config;
 }, (error) => {
+  console.error('Request interceptor error:', error);
+  return Promise.reject(error);
+});
+
+// Add response interceptor for debugging
+client.interceptors.response.use((response) => {
+  return response;
+}, (error) => {
+  if (error.response?.status === 401) {
+    console.error('❌ 401 Unauthorized - Token may be invalid or expired');
+  }
   return Promise.reject(error);
 });
 
@@ -21,7 +35,12 @@ const api = {
   client,
 
   // Token helpers for backward compatibility
-  getToken: () => localStorage.getItem('token') || localStorage.getItem('authToken') || null,
+  getToken: () => {
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+    console.log('Getting token:', token ? 'Found' : 'Not found');
+    return token;
+  },
+  
   authHeaders: () => {
     const token = localStorage.getItem('token') || localStorage.getItem('authToken');
     return token ? { Authorization: `Bearer ${token}` } : {};
