@@ -1,3 +1,5 @@
+// ...existing code...
+// Only export controller functions below
 const { Customer, Sale, SaleItem } = require('../models');
 const { Op } = require('sequelize');
 const validators = require('../utils/validators');
@@ -67,11 +69,16 @@ exports.getAllCustomers = async(req, res, next) => {
 
         // Search by name or mobile
         if (search) {
-            where[Op.or] = [
-                { name: {
-                        [Op.iLike]: `%${search}%` } },
-                { mobile_number: {
-                        [Op.iLike]: `%${search}%` } }
+            where[Op.or] = [{
+                    name: {
+                        [Op.iLike]: `%${search}%`
+                    }
+                },
+                {
+                    mobile_number: {
+                        [Op.iLike]: `%${search}%`
+                    }
+                }
             ];
         }
 

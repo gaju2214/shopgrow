@@ -1,3 +1,25 @@
+// ...existing code...
+
+// Get sales history for a store (simple version)
+exports.getSalesHistory = async(req, res, next) => {
+    try {
+        const sales = await Sale.findAll({
+            where: { store_id: req.store_id },
+            order: [
+                ['created_at', 'DESC']
+            ],
+            include: [
+                { model: Customer, as: 'customer', attributes: ['id', 'name', 'mobile_number'] },
+                { model: SaleItem, as: 'items' }
+            ]
+        });
+        res.status(200).json({ success: true, data: { sales } });
+    } catch (error) {
+        next(error);
+    }
+};
+// ...existing code...
+// Only export controller functions below
 const { Sale, SaleItem, Product, Customer, Category } = require('../models');
 const { sequelize } = require('../config/database');
 const { Op } = require('sequelize');
@@ -260,7 +282,8 @@ exports.getAllSales = async(req, res, next) => {
         // Amount range filter
         if (min_amount) {
             where.total_amount = {
-                [Op.gte]: parseFloat(min_amount) };
+                [Op.gte]: parseFloat(min_amount)
+            };
         }
         if (max_amount) {
             where.total_amount = {
@@ -419,7 +442,8 @@ exports.getSalesAnalytics = async(req, res, next) => {
             where: {
                 ...where,
                 customer_id: {
-                    [Op.ne]: null }
+                    [Op.ne]: null
+                }
             },
             attributes: [
                 'customer_id', [sequelize.fn('COUNT', sequelize.col('Sale.id')), 'order_count'],

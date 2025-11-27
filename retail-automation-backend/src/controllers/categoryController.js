@@ -165,3 +165,23 @@ exports.deleteCategory = async(req, res, next) => {
         next(error);
     }
 };
+
+// Express router for category (for direct import)
+const express = require('express');
+const router = express.Router();
+const auth = require('../middleware/auth');
+
+// सभी routes के लिए auth required
+router.use(auth);
+
+// Category CRUD routes
+router.post('/', exports.createCategory);
+router.get('/', exports.getAllCategories);
+router.get('/:id', exports.getCategoryById);
+router.put('/:id', exports.updateCategory);
+router.delete('/:id', exports.deleteCategory);
+
+module.exports = {
+    ...exports,
+    router
+};

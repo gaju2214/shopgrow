@@ -1,6 +1,7 @@
 const { Product, Category, MarketingQueue } = require('../models');
 const { Op } = require('sequelize');
 const validators = require('../utils/validators');
+
 let marketingQueue;
 try {
     marketingQueue = require('../queue/marketingWorker');
@@ -98,11 +99,16 @@ exports.getAllProducts = async(req, res, next) => {
 
         // Search by name or SKU
         if (search) {
-            where[Op.or] = [
-                { name: {
-                        [Op.iLike]: `%${search}%` } },
-                { sku: {
-                        [Op.iLike]: `%${search}%` } }
+            where[Op.or] = [{
+                    name: {
+                        [Op.iLike]: `%${search}%`
+                    }
+                },
+                {
+                    sku: {
+                        [Op.iLike]: `%${search}%`
+                    }
+                }
             ];
         }
 
@@ -111,23 +117,29 @@ exports.getAllProducts = async(req, res, next) => {
             where.category_id = category_id;
         }
 
-        // Filter by price range
-        if (min_price) {
+        // Filter by price range - FIXED
+        if (min_price && max_price) {
             where.selling_price = {
-                [Op.gte]: parseFloat(min_price) };
-        }
-        if (max_price) {
+                [Op.between]: [parseFloat(min_price), parseFloat(max_price)]
+            };
+        } else if (min_price) {
             where.selling_price = {
-                ...where.selling_price,
+                [Op.gte]: parseFloat(min_price)
+            };
+        } else if (max_price) {
+            where.selling_price = {
                 [Op.lte]: parseFloat(max_price)
             };
         }
 
-        // Filter by low stock
+        // Filter by low stock - FIXED
         if (low_stock === 'true') {
             where[Op.and] = [
-                { stock_quantity: {
-                        [Op.lte]: Product.sequelize.col('low_stock_threshold') } }
+                Product.sequelize.where(
+                    Product.sequelize.col('stock_quantity'),
+                    Op.lte,
+                    Product.sequelize.col('low_stock_threshold')
+                )
             ];
         }
 
@@ -268,7 +280,8 @@ exports.updateProduct = async(req, res, next) => {
                     store_id: req.store_id,
                     sku: value.sku,
                     id: {
-                        [Op.ne]: product.id }
+                        [Op.ne]: product.id
+                    }
                 }
             });
 
@@ -387,7 +400,8 @@ exports.updateStock = async(req, res, next) => {
 
         await product.update({ stock_quantity: newQuantity });
 
-        // Enqueue marketing task: notify customers on WhatsApp and prepare Instagram post (approval required)
+        // Enqueue marketing task - FIXED error handling
+        let marketingEnqueued = false;
         try {
             const mq = await MarketingQueue.create({
                 store_id: req.store_id,
@@ -408,9 +422,14 @@ exports.updateStock = async(req, res, next) => {
             });
 
             // Push job to worker queue
-            try { await marketingQueue.add({ mqId: mq.id }); } catch (e) { console.error('Failed to push marketing job to queue', e?.message || e); }
-        } catch (err) {
-            console.error('Failed to create marketing queue entry', err?.message || err);
+            try {
+                await marketingQueue.add({ mqId: mq.id });
+                marketingEnqueued = true;
+            } catch (queueErr) {
+                console.error('Failed to push marketing job to queue:', queueErr && queueErr.message ? queueErr.message : queueErr);
+            }
+        } catch (mqErr) {
+            console.error('Failed to create marketing queue entry:', mqErr && mqErr.message ? mqErr.message : mqErr);
         }
 
         res.status(200).json({
@@ -420,10 +439,10 @@ exports.updateStock = async(req, res, next) => {
                 product: {
                     id: product.id,
                     name: product.name,
-                    stock_quantity: product.stock_quantity,
+                    stock_quantity: newQuantity,
                     is_low_stock: product.isLowStock()
                 },
-                marketing_enqueued: true
+                marketing_enqueued: marketingEnqueued
             }
         });
 
@@ -440,8 +459,11 @@ exports.getLowStockProducts = async(req, res, next) => {
                 store_id: req.store_id,
                 is_active: true,
                 [Op.and]: [
-                    { stock_quantity: {
-                            [Op.lte]: Product.sequelize.col('low_stock_threshold') } }
+                    Product.sequelize.where(
+                        Product.sequelize.col('stock_quantity'),
+                        Op.lte,
+                        Product.sequelize.col('low_stock_threshold')
+                    )
                 ]
             },
             include: [{

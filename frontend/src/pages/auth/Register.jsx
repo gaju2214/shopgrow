@@ -35,16 +35,19 @@ function Register() {
   // Separate handler for file inputs
   const handleFileChange = (e) => {
     const { name, files } = e.target;
-    
-    // Optional: Add file size validation
+
     if (files[0]) {
-      const maxSize = name === "logo" ? 5 * 1024 * 1024 : 50 * 1024 * 1024; // 5MB for logo, 50MB for video
+      const maxSize = name === "logo" ? 5 * 1024 * 1024 : 50 * 1024 * 1024;
       if (files[0].size > maxSize) {
-        setError(`${name === "logo" ? "Logo" : "Video"} file size should be less than ${maxSize / (1024 * 1024)}MB`);
+        setError(
+          `${name === "logo" ? "Logo" : "Video"} file size should be less than ${
+            maxSize / (1024 * 1024)
+          }MB`
+        );
         return;
       }
     }
-    
+
     setFormData((prev) => ({ ...prev, [name]: files[0] }));
     if (error) setError("");
   };
@@ -54,6 +57,7 @@ function Register() {
     setLoading(true);
     setError("");
 
+    // Validation checks
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
       setLoading(false);
@@ -66,9 +70,15 @@ function Register() {
       return;
     }
 
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long!");
+      setLoading(false);
+      return;
+    }
+
     try {
       const registrationData = new FormData();
-      
+
       // Append all form fields to FormData
       Object.keys(formData).forEach((key) => {
         if (formData[key] && key !== "confirmPassword") {
@@ -76,21 +86,46 @@ function Register() {
         }
       });
 
-      const response = await api.client.post(
-        "/api/auth/register",
-        registrationData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      // ✅ FIXED: Use api.register() helper method instead of api.client.post()
+      const response = await api.register(registrationData);
 
       if (response.data.success) {
-        alert("Registration Successful!");
+        alert("Registration Successful! Please login.");
+        // Clear form
+        setFormData({
+          name: "",
+          email: "",
+          mobile: "",
+          address: "",
+          city: "",
+          storeName: "",
+          category: "",
+          storeId: "",
+          url: "",
+          gstNo: "",
+          password: "",
+          confirmPassword: "",
+          logo: null,
+          video: null,
+        });
         navigate("/login");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed. Try again.");
+      console.error("Registration error:", err);
+      
+      // Better error handling
+      if (err.code === "ERR_NETWORK" || !err.response) {
+        setError("Cannot connect to server. Please ensure backend is running on http://localhost:5000");
+      } else {
+        const errorMessage =
+          err.response?.data?.error?.message ||
+          err.response?.data?.message ||
+          "Registration failed. Please try again.";
+        setError(errorMessage);
+      }
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -113,6 +148,7 @@ function Register() {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -125,6 +161,7 @@ function Register() {
                   maxLength={10}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -139,6 +176,7 @@ function Register() {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -150,6 +188,7 @@ function Register() {
                   value={formData.address}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -164,6 +203,7 @@ function Register() {
                   value={formData.city}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -173,6 +213,7 @@ function Register() {
                   value={formData.category}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 >
                   <option value="">Select Category</option>
                   <option value="ElectraPoint">ElectraPoint</option>
@@ -193,6 +234,7 @@ function Register() {
                   value={formData.storeName}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -204,6 +246,7 @@ function Register() {
                   value={formData.storeId}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -217,6 +260,7 @@ function Register() {
                   placeholder="Website / Webpage URL (Optional)"
                   value={formData.url}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
 
@@ -227,6 +271,7 @@ function Register() {
                   placeholder="GST Number (Optional)"
                   value={formData.gstNo}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -242,6 +287,7 @@ function Register() {
                   onChange={handleChange}
                   minLength={6}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -253,29 +299,36 @@ function Register() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
 
-            {/* UPLOAD ROW (with gap) */}
+            {/* UPLOAD ROW */}
             <div className="upload-row">
               <label className="file-upload">
-                <span>📁 Upload Logo</span>
-                <input 
-                  type="file" 
+                <span>
+                  📁 Upload Logo {formData.logo && `(${formData.logo.name})`}
+                </span>
+                <input
+                  type="file"
                   name="logo"
-                  accept="image/*" 
+                  accept="image/*"
                   onChange={handleFileChange}
+                  disabled={loading}
                 />
               </label>
 
               <label className="file-upload">
-                <span>🎥 Upload Video</span>
-                <input 
-                  type="file" 
+                <span>
+                  🎥 Upload Video {formData.video && `(${formData.video.name})`}
+                </span>
+                <input
+                  type="file"
                   name="video"
-                  accept="video/*" 
+                  accept="video/*"
                   onChange={handleFileChange}
+                  disabled={loading}
                 />
               </label>
             </div>
@@ -289,18 +342,25 @@ function Register() {
             <p>
               Already have an account? <Link to="/login">Login</Link>
             </p>
-            <p><Link to="/">Back to Home</Link></p>
+            <p>
+              <Link to="/">Back to Home</Link>
+            </p>
           </div>
         </div>
       </div>
 
       {/* Right Section */}
       <div className="signup-right">
-        <h1>Welcome to the ShopGrow</h1>
+        <h1>Welcome to ShopGrow</h1>
+        {/* ✅ FIXED: Use correct image path from public folder */}
         <img
-          src="abc.webp"
+          src="/abc.webp"
           className="signup-illustration"
           alt="signup-screen"
+          onError={(e) => {
+            e.target.style.display = 'none';
+            console.error('Image failed to load');
+          }}
         />
       </div>
     </div>

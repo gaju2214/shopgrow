@@ -37,15 +37,19 @@ app.use('/api/auth', authRoutes);
 
 // Import product routes
 const productRoutes = require('./routes/productRoutes');
-
-// Register product routes
 app.use('/api/products', productRoutes);
 
 // Import category routes
 const categoryRoutes = require('./routes/categoryRoutes');
-
-// Register category routes
 app.use('/api/categories', categoryRoutes);
+
+// Import customer routes
+const customerRoutes = require('./routes/customerRoutes');
+app.use('/api/customers', customerRoutes);
+
+// Import sales routes
+const salesRoutes = require('./routes/salesRoutes');
+app.use('/api/sales', salesRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
