@@ -94,7 +94,7 @@ function Login() {
           </form>
 
           <p className="small-link">
-            Don’t have an account? <Link to="/register">Register</Link>
+            Don't have an account? <Link to="/register">Register</Link>
           </p>
 
           <p className="small-link">

@@ -1,5 +1,31 @@
 {
   "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "cloudinary": "^1.41.3",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^4.2.1"
-  }
+  },
+  "name": "shopgrow",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaju2214/shopgrow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gaju2214/shopgrow/issues"
+  },
+  "homepage": "https://github.com/gaju2214/shopgrow#readme",
+  "description": ""
 }

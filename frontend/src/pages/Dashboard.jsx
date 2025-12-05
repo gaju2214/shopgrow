@@ -461,29 +461,7 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* ROW 3: Analytics Card - Full Width */}
-          <div className="analytics-full-card card">
-            <div className="card-header">
-              <h2 className="card-title">Analytics Overview</h2>
-              <button className="menu-btn">⋯</button>
-            </div>
-            <div className="analytics-grid">
-              {analyticsData.map((item) => (
-                <div key={item.id} className="analytics-box">
-                  <div className={`analytics-icon ${item.iconClass}`}>
-                    {item.icon}
-                  </div>
-                  <div className="analytics-content">
-                    <h4>{item.title}</h4>
-                    <h3>{item.value}</h3>
-                    <span className={`analytics-trend ${item.isPositive ? 'positive' : 'negative'}`}>
-                      {item.trend}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      
         </div>
       </main>
     </div>

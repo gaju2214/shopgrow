@@ -25,7 +25,18 @@ exports.register = async(req, res, next) => {
         console.log('📥 Registration request body:', req.body);
         console.log('📁 Uploaded file:', req.file);
 
-        const { name, email, mobile, city, address, category, webpage, password } = req.body;
+
+        // Map frontend fields to backend model fields
+        const {
+            name,
+            email,
+            mobile,
+            city,
+            address,
+            category,
+            webpage,
+            password
+        } = req.body;
 
         // Validate required fields
         if (!name || !email || !mobile || !password) {
@@ -53,19 +64,17 @@ exports.register = async(req, res, next) => {
             });
         }
 
-        // Create store - FIX: Use correct column names from your database
+        // Create store using correct model fields
         const store = await Store.create({
             store_name: name,
+            store_logo_url: req.file ? `/uploads/logos/${req.file.filename}` : null,
+            store_address: address || null,
+            store_city: city || null,
+            store_category: category || null,
+            mobile_number: mobile,
             email: email,
-            mobile_number: mobile, // ✅ Changed from contact_phone to mobile_number
-            owner_name: name, // If required by your model
-            city: city || null,
-            address: address || null,
-            category: category || null,
-            website_url: webpage || null,
-            logo_url: req.file ? `/uploads/logos/${req.file.filename}` : null,
             password: password,
-            is_active: true // Set active by default
+            is_active: true
         });
 
         console.log('✅ Store created:', store.id);

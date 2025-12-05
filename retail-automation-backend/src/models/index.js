@@ -43,13 +43,20 @@ SaleItem.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
 MarketingQueue.belongsTo(Store, { foreignKey: 'store_id', as: 'store' });
 Template.belongsTo(Store, { foreignKey: 'store_id', as: 'store' });
 
+const SocialToken = require('./SocialToken');
+
+// SocialToken associations
+SocialToken.belongsTo(Store, { foreignKey: 'store_id', as: 'store' });
+Store.hasMany(SocialToken, { foreignKey: 'store_id', as: 'socialTokens' });
+
 module.exports = {
-  Store,
-  Category,
-  Product,
-  Customer,
-  Sale,
-  SaleItem
-  ,MarketingQueue,
-  Template
+    Store,
+    Category,
+    Product,
+    Customer,
+    Sale,
+    SaleItem,
+    MarketingQueue,
+    Template,
+    SocialToken
 };

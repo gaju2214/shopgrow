@@ -21,6 +21,7 @@
 
 
 /* Navbar Styles */
+
 .navbar {
     padding: 20px 40px;
     display: flex;
@@ -34,7 +35,9 @@
     font-weight: bold;
 }
 
+
 /* Content Styles */
+
 .auth-section {
     flex: 1;
     display: flex;
@@ -42,7 +45,8 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
-    margin-top: -60px; /* To center the content better */
+    margin-top: -60px;
+    /* To center the content better */
 }
 
 .welcome-text {

@@ -84,7 +84,21 @@ const startServer = async() => {
 ║  Database: Connected                   ║
 ║  CORS: Enabled for localhost:5173     ║
 ╚════════════════════════════════════════╝
-      `);
+            `);
+
+            // Debug: List all registered routes
+            console.log('Registered routes:');
+            app._router && Array.isArray(app._router.stack) && app._router.stack.forEach((middleware) => {
+                if (middleware && middleware.route && middleware.route.path) {
+                    console.log(middleware.route.path);
+                } else if (middleware && middleware.name === 'router' && middleware.handle && Array.isArray(middleware.handle.stack)) {
+                    middleware.handle.stack.forEach((handler) => {
+                        if (handler && handler.route && handler.route.path) {
+                            console.log(handler.route.path);
+                        }
+                    });
+                }
+            });
         });
 
     } catch (error) {

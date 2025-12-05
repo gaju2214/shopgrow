@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Settings.css';
@@ -25,24 +26,39 @@ function Settings() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [instagramToken, setInstagramToken] = useState('');
+  const [instagramTokenId, setInstagramTokenId] = useState('');
+  const [tokenExpiry, setTokenExpiry] = useState('');
+  const [newToken, setNewToken] = useState('');
+
+  // Fetch Instagram Token
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    const storeId = localStorage.getItem('storeId');
+    if (!storeId || !token) return;
+    
+    fetch(`http://localhost:5000/api/tokens/store/${storeId}/platform/instagram`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setInstagramToken(data.long_token || '');
+        setInstagramTokenId(data.id || '');
+        setTokenExpiry(data.expires_at || '');
+      })
+      .catch(() => {
+        setInstagramToken('');
+        setInstagramTokenId('');
+        setTokenExpiry('');
+      });
+  }, []);
 
   useEffect(() => {
     fetchSettings();
   }, []);
 
   const fetchSettings = async () => {
-    const mockData = {
-      // storeName: 'My Store',
-      // email: 'store@example.com',
-      // mobileNumber: '9876543210',
-      // whatsappNumber: '9876543210',
-      // address: '123 Main Street',
-      // city: 'Mumbai',
-      // state: 'Maharashtra',
-      // pincode: '400001',
-      // gstn: '27AAAAA0000A1Z5',
-      // pan: 'ABCDE1234F'
-    };
+    const mockData = {};
     setFormData(prev => ({
       ...prev,
       ...mockData
@@ -67,6 +83,7 @@ function Settings() {
       setLoading(false);
       return;
     }
+    
     if (formData.newPassword && !formData.oldPassword) {
       setError('❌ Please enter old password to change password!');
       setLoading(false);
@@ -85,6 +102,92 @@ function Settings() {
     }, 1000);
   };
 
+  const handleSaveToken = async () => {
+    if (!newToken.trim()) {
+      setError('❌ Please enter a valid Instagram token');
+      return;
+    }
+
+    const token = localStorage.getItem('authToken');
+    const storeId = localStorage.getItem('storeId');
+
+    try {
+      setLoading(true);
+      setError('');
+      
+      const response = await fetch('http://localhost:5000/api/tokens/instagram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          store_id: storeId,
+          long_token: newToken
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setInstagramToken(newToken);
+        setInstagramTokenId(data.id || '');
+        setTokenExpiry(data.expires_at || '');
+        setNewToken('');
+        setSuccess('✅ Instagram token saved successfully!');
+      } else {
+        setError(`❌ Failed to save token: ${data.message}`);
+      }
+    } catch (err) {
+      console.error('Token save error:', err);
+      setError('❌ Error saving Instagram token. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefreshToken = async () => {
+    if (!instagramToken) {
+      setError('❌ No Instagram token to refresh!');
+      return;
+    }
+
+    const token = localStorage.getItem('authToken');
+    const storeId = localStorage.getItem('storeId');
+
+    try {
+      setLoading(true);
+      setError('');
+      
+      const response = await fetch(`http://localhost:5000/api/tokens/refresh/instagram`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          store_id: storeId,
+          current_token: instagramToken
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setInstagramToken(data.long_token || data.access_token);
+        setTokenExpiry(data.expires_at);
+        setSuccess('✅ Instagram token refreshed successfully!');
+      } else {
+        setError(`❌ Failed to refresh token: ${data.message}`);
+      }
+    } catch (err) {
+      console.error('Token refresh error:', err);
+      setError('❌ Error refreshing token. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     navigate('/login');
@@ -94,7 +197,7 @@ function Settings() {
     <div className="crm-dashboard">
       <aside className="crm-sidebar">
         <div className="sidebar-logo">
-          <span className="logo-icon">⚙️</span>
+          <span className="logo-icon">🏪</span>
         </div>
         <nav className="sidebar-nav">
           <button className="nav-item" onClick={() => navigate('/dashboard')} title="Dashboard">
@@ -144,12 +247,12 @@ function Settings() {
             {success && <div className="success-message">{success}</div>}
 
             <form onSubmit={handleSubmit} className="settings-form">
-              {/* Store Information - 2 Column Layout */}
+              {/* Store Information */}
               <div className="form-section">
                 <h2 className="section-title">Store Information</h2>
                 <div className="form-row-2col">
                   <div className="form-group">
-                    <label>Product Name *</label>
+                    <label>Store Name *</label>
                     <input 
                       name="storeName" 
                       value={formData.storeName} 
@@ -246,7 +349,7 @@ function Settings() {
 
                 <div className="form-row-2col">
                   <div className="form-group">
-                    <label>GST *</label>
+                    <label>GSTN *</label>
                     <input 
                       name="gstn" 
                       maxLength={15} 
@@ -257,16 +360,94 @@ function Settings() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Instagram *</label>
+                    <label>PAN</label>
                     <input 
                       name="pan" 
                       maxLength={10} 
                       value={formData.pan} 
                       onChange={handleChange} 
                       disabled={loading} 
-                      required 
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Instagram Token Management */}
+              <div className="form-section">
+                <h2 className="section-title">Instagram Integration</h2>
+                
+                <div className="form-row-2col">
+                  <div className="form-group">
+                    <label>Token ID</label>
+                    <input 
+                      type="text" 
+                      value={instagramTokenId} 
+                      readOnly 
+                      placeholder="No token ID"
+                    />
+                  </div>
+                  {tokenExpiry && (
+                    <div className="form-group">
+                      <label>Token Expires</label>
+                      <input 
+                        type="text" 
+                        value={new Date(tokenExpiry).toLocaleDateString('en-IN')} 
+                        readOnly 
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-group full-width">
+                  <label>Current Instagram Access Token</label>
+                  <input 
+                    type="text" 
+                    value={instagramToken} 
+                    readOnly 
+                    placeholder="No token saved"
+                    title={instagramToken}
+                  />
+                </div>
+
+                <div className="form-group full-width">
+                  <label>Add/Update Instagram Token</label>
+                  <input 
+                    type="text" 
+                    value={newToken} 
+                    onChange={(e) => setNewToken(e.target.value)}
+                    placeholder="Paste your Instagram long-lived access token here"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="token-actions-row">
+                  <button 
+                    type="button" 
+                    className="btn-save-token" 
+                    onClick={handleSaveToken}
+                    disabled={!newToken.trim() || loading}
+                  >
+                    💾 Save Token
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn-refresh-token" 
+                    onClick={handleRefreshToken}
+                    disabled={!instagramToken || loading}
+                  >
+                    🔄 Refresh Existing Token
+                  </button>
+                </div>
+
+                <div className="info-box">
+                  <p>ℹ️ <strong>How to get Instagram token:</strong></p>
+                  <ol>
+                    <li>Go to Facebook Developer Console</li>
+                    <li>Create an app with Instagram Basic Display</li>
+                    <li>Generate long-lived access token (valid for 60 days)</li>
+                    <li>Paste the token above and click Save</li>
+                    <li>Refresh token before it expires</li>
+                  </ol>
                 </div>
               </div>
 

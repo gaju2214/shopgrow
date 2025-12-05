@@ -15,9 +15,31 @@ exports.createCategory = async(req, res, next) => {
             });
         }
 
+        if (!req.store_id) {
+            return res.status(401).json({
+                success: false,
+                error: {
+                    code: 'AUTH_REQUIRED',
+                    message: 'Store authentication required. Please login again.'
+                }
+            });
+        }
+
         value.store_id = req.store_id;
 
-        const category = await Category.create(value);
+        let category;
+        try {
+            category = await Category.create(value);
+        } catch (err) {
+            console.error('Failed to create category:', err);
+            return res.status(500).json({
+                success: false,
+                error: {
+                    code: 'DB_ERROR',
+                    message: err.message || 'Failed to create category.'
+                }
+            });
+        }
 
         res.status(201).json({
             success: true,
@@ -26,6 +48,7 @@ exports.createCategory = async(req, res, next) => {
         });
 
     } catch (error) {
+        console.error('Category create error:', error);
         next(error);
     }
 };

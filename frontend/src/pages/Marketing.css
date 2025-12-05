@@ -1,3 +1,29 @@
+.add-reel-btn,
+.add-post-btn {
+    padding: 8px 18px;
+    margin: 0 8px;
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.add-reel-btn:hover,
+.add-post-btn:hover {
+    background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+}
+
+
 /* ============================================================
    GLOBAL RESET
    ============================================================ */
