@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "dev": "nodemon --watch src src/server.js",
     "db:sync": "node src/utils/syncModels.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -36,6 +36,6 @@
     "twilio": "^4.5.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.11"
   }
 }

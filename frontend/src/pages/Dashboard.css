@@ -398,6 +398,47 @@ body {
    ROW 2: Sales Reports + Top Products
    ============================================================ */
 
+/* Mobile overrides to enable scrolling and a compact sidebar */
+@media (max-width: 700px) {
+    html, body, #root {
+        height: auto;
+        overflow: visible;
+    }
+
+    .crm-dashboard {
+        position: relative;
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        flex-direction: column;
+    }
+
+    .crm-sidebar {
+        position: relative;
+        width: 60px;
+        height: auto;
+        padding: 12px 6px;
+        box-shadow: none;
+        flex-direction: row;
+        overflow: visible;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .crm-main {
+        width: 100%;
+        height: auto;
+    }
+
+    .crm-navbar {
+        padding: 10px 14px;
+    }
+
+    .crm-content {
+        padding: 12px;
+    }
+}
+
 .content-row-two {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

@@ -15,3 +15,45 @@ body {
   margin: 0 auto;
   padding: 2rem;
 }
+
+/* Responsive base rules */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Fluid type scale */
+body {
+  font-size: 16px;
+}
+
+@media (max-width: 900px) {
+  .app {
+    padding: 1.25rem;
+  }
+
+  body {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 0.75rem;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  /* Utility: make images and tables responsive by default */
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+}
