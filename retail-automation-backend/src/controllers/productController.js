@@ -10,6 +10,7 @@ try {
     marketingQueue = { add: async() => {} };
 }
 
+
 // Create product
 exports.createProduct = async(req, res, next) => {
     try {
@@ -68,6 +69,13 @@ exports.createProduct = async(req, res, next) => {
             }
         }
 
+        // Handle image upload and set image_urls
+        let image_urls = [];
+        if (req.file) {
+            image_urls.push(`http://localhost:5000/uploads/${req.file.filename}`);
+        }
+        value.image_urls = image_urls;
+
         // Create product
         const product = await Product.create(value);
 
@@ -81,6 +89,7 @@ exports.createProduct = async(req, res, next) => {
         next(error);
     }
 };
+
 
 // Get all products with pagination and filtering
 exports.getAllProducts = async(req, res, next) => {
@@ -98,11 +107,16 @@ exports.getAllProducts = async(req, res, next) => {
 
         // Search by name or SKU
         if (search) {
-            where[Op.or] = [
-                { name: {
-                        [Op.iLike]: `%${search}%` } },
-                { sku: {
-                        [Op.iLike]: `%${search}%` } }
+            where[Op.or] = [{
+                    name: {
+                        [Op.iLike]: `%${search}%`
+                    }
+                },
+                {
+                    sku: {
+                        [Op.iLike]: `%${search}%`
+                    }
+                }
             ];
         }
 
@@ -114,7 +128,8 @@ exports.getAllProducts = async(req, res, next) => {
         // Filter by price range
         if (min_price) {
             where.selling_price = {
-                [Op.gte]: parseFloat(min_price) };
+                [Op.gte]: parseFloat(min_price)
+            };
         }
         if (max_price) {
             where.selling_price = {
@@ -126,8 +141,11 @@ exports.getAllProducts = async(req, res, next) => {
         // Filter by low stock
         if (low_stock === 'true') {
             where[Op.and] = [
-                { stock_quantity: {
-                        [Op.lte]: Product.sequelize.col('low_stock_threshold') } }
+                Product.sequelize.where(
+                    Product.sequelize.col('stock_quantity'),
+                    Op.lte,
+                    Product.sequelize.col('low_stock_threshold')
+                )
             ];
         }
 
@@ -168,6 +186,7 @@ exports.getAllProducts = async(req, res, next) => {
     }
 };
 
+
 // Get single product by ID
 exports.getProductById = async(req, res, next) => {
     try {
@@ -207,6 +226,7 @@ exports.getProductById = async(req, res, next) => {
         next(error);
     }
 };
+
 
 // Update product
 exports.updateProduct = async(req, res, next) => {
@@ -268,7 +288,8 @@ exports.updateProduct = async(req, res, next) => {
                     store_id: req.store_id,
                     sku: value.sku,
                     id: {
-                        [Op.ne]: product.id }
+                        [Op.ne]: product.id
+                    }
                 }
             });
 
@@ -296,6 +317,7 @@ exports.updateProduct = async(req, res, next) => {
         next(error);
     }
 };
+
 
 // Delete product (soft delete by setting is_active to false)
 exports.deleteProduct = async(req, res, next) => {
@@ -329,6 +351,7 @@ exports.deleteProduct = async(req, res, next) => {
         next(error);
     }
 };
+
 
 // Update stock quantity
 exports.updateStock = async(req, res, next) => {
@@ -407,10 +430,14 @@ exports.updateStock = async(req, res, next) => {
                 send_instagram: true
             });
 
-            // Push job to worker queue
-            try { await marketingQueue.add({ mqId: mq.id }); } catch (e) { console.error('Failed to push marketing job to queue', e?.message || e); }
+            // Push job to worker queue - FIXED: removed space in optional chaining
+            try {
+                await marketingQueue.add({ mqId: mq.id });
+            } catch (e) {
+                console.error('Failed to push marketing job to queue', e ? (e.message || e) : e);
+            }
         } catch (err) {
-            console.error('Failed to create marketing queue entry', err?.message || err);
+            console.error('Failed to create marketing queue entry', err ? (err.message || err) : err);
         }
 
         res.status(200).json({
@@ -432,6 +459,7 @@ exports.updateStock = async(req, res, next) => {
     }
 };
 
+
 // Get low stock products
 exports.getLowStockProducts = async(req, res, next) => {
     try {
@@ -440,8 +468,11 @@ exports.getLowStockProducts = async(req, res, next) => {
                 store_id: req.store_id,
                 is_active: true,
                 [Op.and]: [
-                    { stock_quantity: {
-                            [Op.lte]: Product.sequelize.col('low_stock_threshold') } }
+                    Product.sequelize.where(
+                        Product.sequelize.col('stock_quantity'),
+                        Op.lte,
+                        Product.sequelize.col('low_stock_threshold')
+                    )
                 ]
             },
             include: [{

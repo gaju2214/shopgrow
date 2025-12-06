@@ -41,11 +41,13 @@ export default function Marketing() {
   const getProductImage = (product) => {
     // Check if image_urls array exists and has items
     if (product.image_urls && Array.isArray(product.image_urls) && product.image_urls.length > 0) {
-      return product.image_urls[0]; // Get first image from array
+      // Use first image URL directly
+      return product.image_urls[0];
     }
     // Fallback to image field if exists
     if (product.image) {
-      return product.image;
+      if (product.image.startsWith('http')) return product.image;
+      return `http://localhost:5000/uploads/${product.image}`;
     }
     // No image available
     return null;
